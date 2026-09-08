@@ -1,8 +1,8 @@
 import { RfqFormData } from '../pages/RfqPage';
 
-export const datosBaseValidos: RfqFormData = {
+export const baseValidData: RfqFormData = {
   firstName: 'Ana',
-  lastName: 'Gómez',
+  lastName: 'Gomez',
   email: 'ana.gomez@example.com',
   phone: '50588887777',
   company: 'Acme Logistics',
@@ -10,47 +10,47 @@ export const datosBaseValidos: RfqFormData = {
   services: ['warehousing', 'transportation'],
   timeline: '1-3-months',
   volume: '10,000 units',
-  details: 'Necesitamos soporte para almacenamiento y distribución de productos electrónicos.',
+  details: 'We need support with warehousing and distribution of electronic products.',
 };
 
-export const combinacionesValidas: RfqFormData[] = [
-  { ...datosBaseValidos },
+export const validCombinations: RfqFormData[] = [
+  { ...baseValidData },
   {
-    ...datosBaseValidos,
+    ...baseValidData,
     industry: 'healthcare',
     services: ['manufacturing', 'supply-chain', 'technology'],
     timeline: 'immediate',
     volume: undefined,
   },
   {
-    ...datosBaseValidos,
+    ...baseValidData,
     industry: 'other',
     services: ['value-added'],
     timeline: 'flexible',
   },
 ];
 
-function sinCampo<K extends keyof RfqFormData>(campo: K): Partial<RfqFormData> {
-  const { [campo]: _omitido, ...resto } = datosBaseValidos;
-  return resto;
+function withoutField<K extends keyof RfqFormData>(field: K): Partial<RfqFormData> {
+  const { [field]: _omitted, ...rest } = baseValidData;
+  return rest;
 }
 
-export interface CasoInvalido {
-  campo: string;
+export interface InvalidCase {
+  field: string;
   data: Partial<RfqFormData>;
 }
 
-// Los mensajes de validación son nativos del navegador (validationMessage) y varían
-// entre motores/idiomas, por eso estos casos se verifican con isFieldInvalid(campo),
-// no comparando texto exacto.
-export const casosInvalidos: CasoInvalido[] = [
-  { campo: 'firstName', data: { ...datosBaseValidos, firstName: '' } },
-  { campo: 'lastName', data: { ...datosBaseValidos, lastName: '' } },
-  { campo: 'email', data: { ...datosBaseValidos, email: '' } },
-  { campo: 'email', data: { ...datosBaseValidos, email: 'correo-invalido' } },
-  { campo: 'phone', data: { ...datosBaseValidos, phone: '' } },
-  { campo: 'company', data: { ...datosBaseValidos, company: '' } },
-  { campo: 'details', data: { ...datosBaseValidos, details: '' } },
-  { campo: 'industry', data: sinCampo('industry') },
-  { campo: 'timeline', data: sinCampo('timeline') },
+// Validation messages are native to the browser (validationMessage) and vary
+// across engines/locales, so these cases are verified with isFieldInvalid(field)
+// instead of comparing exact text.
+export const invalidCases: InvalidCase[] = [
+  { field: 'firstName', data: { ...baseValidData, firstName: '' } },
+  { field: 'lastName', data: { ...baseValidData, lastName: '' } },
+  { field: 'email', data: { ...baseValidData, email: '' } },
+  { field: 'email', data: { ...baseValidData, email: 'invalid-email' } },
+  { field: 'phone', data: { ...baseValidData, phone: '' } },
+  { field: 'company', data: { ...baseValidData, company: '' } },
+  { field: 'details', data: { ...baseValidData, details: '' } },
+  { field: 'industry', data: withoutField('industry') },
+  { field: 'timeline', data: withoutField('timeline') },
 ];

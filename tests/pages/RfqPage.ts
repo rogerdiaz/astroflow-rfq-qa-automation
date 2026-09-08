@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 import { BasePage } from './BasePage';
 
 export type RfqIndustry =
@@ -88,10 +88,10 @@ export class RfqPage extends BasePage {
   }
 
   /**
-   * El submit exitoso dispara un window.alert() nativo del navegador
-   * ("Thank you for your request!..."), no un elemento del DOM.
-   * Playwright descarta los dialogs automáticamente si no hay listener,
-   * por eso hay que registrar el handler antes de hacer click.
+   * A successful submit triggers a native browser window.alert()
+   * ("Thank you for your request!..."), not a DOM element.
+   * Playwright auto-dismisses dialogs unless a listener is registered,
+   * so the handler must be set up before clicking.
    */
   async submitAndGetConfirmationMessage(): Promise<string> {
     const dialogMessage = new Promise<string>((resolve) => {
@@ -105,9 +105,9 @@ export class RfqPage extends BasePage {
   }
 
   /**
-   * Los campos usan validación nativa HTML5 (required / type="email"),
-   * no hay mensajes de error custom en el DOM. El texto viene de
-   * `validationMessage`, que depende del motor del navegador.
+   * Fields rely on native HTML5 validation (required / type="email"),
+   * there's no custom error UI in the DOM. The text comes from
+   * `validationMessage`, which depends on the browser engine.
    */
   async getFieldValidationMessage(fieldId: string): Promise<string> {
     return this.page
@@ -117,5 +117,33 @@ export class RfqPage extends BasePage {
 
   async isFieldInvalid(fieldId: string): Promise<boolean> {
     return this.page.locator(`#${fieldId}`).evaluate((el: HTMLInputElement) => !el.validity.valid);
+  }
+
+  /**
+   * Exposes the locators of every form field so the test can verify their
+   * visibility with soft assertions (this isn't page logic itself, which is
+   * why it doesn't include any assertion here).
+   */
+  getFormFieldLocators(): Record<string, Locator> {
+    const serviceLocators = Object.fromEntries(
+      Object.entries(SERVICE_LABELS).map(([service, label]) => [
+        `service:${service}`,
+        this.page.getByRole('checkbox', { name: label }),
+      ]),
+    );
+
+    return {
+      firstName: this.page.locator(this.firstNameInput),
+      lastName: this.page.locator(this.lastNameInput),
+      email: this.page.locator(this.emailInput),
+      phone: this.page.locator(this.phoneInput),
+      company: this.page.locator(this.companyInput),
+      industry: this.page.locator(this.industrySelect),
+      timeline: this.page.locator(this.timelineSelect),
+      volume: this.page.locator(this.volumeInput),
+      details: this.page.locator(this.detailsTextarea),
+      submitButton: this.page.getByRole('button', { name: 'Submit Request' }),
+      ...serviceLocators,
+    };
   }
 }
