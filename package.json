@@ -1,0 +1,32 @@
+{
+  "name": "newtest",
+  "version": "1.0.0",
+  "description": "Proyecto de automatización con Playwright + TypeScript.",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rogerdiaz/newTest.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/rogerdiaz/newTest/issues"
+  },
+  "homepage": "https://github.com/rogerdiaz/newTest#readme",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.5.0",
+    "eslint": "^10.10.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.6",
+    "typescript-eslint": "^8.70.0"
+  }
+}
