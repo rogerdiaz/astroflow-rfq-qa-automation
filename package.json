@@ -5,6 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:sanity": "playwright test --grep @sanity",
+    "test:regression": "playwright test --grep @regression",
     "lint": "eslint .",
     "format": "prettier --write ."
   },

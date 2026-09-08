@@ -16,7 +16,7 @@ test.describe('Formulario RFQ', () => {
     await homePage.goToRfqForm();
   });
 
-  test('envía el formulario con datos válidos (happy path)', async () => {
+  test('envía el formulario con datos válidos (happy path) @smoke @sanity @regression', async () => {
     await rfqPage.fillForm(datosBaseValidos);
 
     const mensaje = await rfqPage.submitAndGetConfirmationMessage();
@@ -25,7 +25,7 @@ test.describe('Formulario RFQ', () => {
   });
 
   combinacionesValidas.forEach((data, index) => {
-    test(`envía el formulario con combinación válida #${index + 1}`, async () => {
+    test(`envía el formulario con combinación válida #${index + 1} @sanity @regression`, async () => {
       await rfqPage.fillForm(data);
 
       const mensaje = await rfqPage.submitAndGetConfirmationMessage();
@@ -35,7 +35,7 @@ test.describe('Formulario RFQ', () => {
   });
 
   for (const [index, caso] of casosInvalidos.entries()) {
-    test(`bloquea el envío si "${caso.campo}" es inválido (caso ${index + 1})`, async () => {
+    test(`bloquea el envío si "${caso.campo}" es inválido (caso ${index + 1}) @regression`, async () => {
       await rfqPage.fillForm(caso.data);
       await rfqPage.submit();
 
