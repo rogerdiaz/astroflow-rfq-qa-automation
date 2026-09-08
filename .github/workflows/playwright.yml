@@ -6,6 +6,16 @@ on:
   pull_request:
     branches: [main, develop]
   workflow_dispatch:
+    inputs:
+      test_group:
+        description: 'Test group to run'
+        required: true
+        default: 'regression'
+        type: choice
+        options:
+          - smoke
+          - sanity
+          - regression
 
 jobs:
   test:
@@ -40,7 +50,7 @@ jobs:
         run: npx playwright install-deps chromium
 
       - name: Run tests
-        run: npx playwright test --project=chromium
+        run: npx playwright test --project=chromium --grep "@${{ inputs.test_group || 'regression' }}"
         env:
           BASE_URL: ${{ vars.BASE_URL }}
 
