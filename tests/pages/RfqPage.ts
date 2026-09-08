@@ -87,13 +87,35 @@ export class RfqPage extends BasePage {
     await this.page.getByRole('button', { name: 'Submit Request' }).click();
   }
 
-  // TODO: confirmar selector real una vez que se vea el estado de éxito en el navegador
-  async isSubmitSuccessVisible(): Promise<boolean> {
-    return this.isVisible('.success-message');
+  /**
+   * El submit exitoso dispara un window.alert() nativo del navegador
+   * ("Thank you for your request!..."), no un elemento del DOM.
+   * Playwright descarta los dialogs automáticamente si no hay listener,
+   * por eso hay que registrar el handler antes de hacer click.
+   */
+  async submitAndGetConfirmationMessage(): Promise<string> {
+    const dialogMessage = new Promise<string>((resolve) => {
+      this.page.once('dialog', async (dialog) => {
+        resolve(dialog.message());
+        await dialog.accept();
+      });
+    });
+    await this.submit();
+    return dialogMessage;
   }
 
-  // TODO: confirmar selector real de los mensajes de validación (inspeccionar un campo inválido)
-  async getFieldError(field: string): Promise<string | null> {
-    return this.page.locator(`[data-error-for="${field}"]`).textContent();
+  /**
+   * Los campos usan validación nativa HTML5 (required / type="email"),
+   * no hay mensajes de error custom en el DOM. El texto viene de
+   * `validationMessage`, que depende del motor del navegador.
+   */
+  async getFieldValidationMessage(fieldId: string): Promise<string> {
+    return this.page
+      .locator(`#${fieldId}`)
+      .evaluate((el: HTMLInputElement) => el.validationMessage);
+  }
+
+  async isFieldInvalid(fieldId: string): Promise<boolean> {
+    return this.page.locator(`#${fieldId}`).evaluate((el: HTMLInputElement) => !el.validity.valid);
   }
 }
