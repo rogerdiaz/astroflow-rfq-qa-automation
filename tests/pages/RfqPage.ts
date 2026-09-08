@@ -88,10 +88,10 @@ export class RfqPage extends BasePage {
   }
 
   /**
-   * El submit exitoso dispara un window.alert() nativo del navegador
-   * ("Thank you for your request!..."), no un elemento del DOM.
-   * Playwright descarta los dialogs automáticamente si no hay listener,
-   * por eso hay que registrar el handler antes de hacer click.
+   * A successful submit triggers a native browser window.alert()
+   * ("Thank you for your request!..."), not a DOM element.
+   * Playwright auto-dismisses dialogs unless a listener is registered,
+   * so the handler must be set up before clicking.
    */
   async submitAndGetConfirmationMessage(): Promise<string> {
     const dialogMessage = new Promise<string>((resolve) => {
@@ -105,9 +105,9 @@ export class RfqPage extends BasePage {
   }
 
   /**
-   * Los campos usan validación nativa HTML5 (required / type="email"),
-   * no hay mensajes de error custom en el DOM. El texto viene de
-   * `validationMessage`, que depende del motor del navegador.
+   * Fields rely on native HTML5 validation (required / type="email"),
+   * there's no custom error UI in the DOM. The text comes from
+   * `validationMessage`, which depends on the browser engine.
    */
   async getFieldValidationMessage(fieldId: string): Promise<string> {
     return this.page
