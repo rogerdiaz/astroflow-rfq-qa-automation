@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 import { BasePage } from './BasePage';
 
 export type RfqIndustry =
@@ -117,5 +117,33 @@ export class RfqPage extends BasePage {
 
   async isFieldInvalid(fieldId: string): Promise<boolean> {
     return this.page.locator(`#${fieldId}`).evaluate((el: HTMLInputElement) => !el.validity.valid);
+  }
+
+  /**
+   * Exposes the locators of every form field so the test can verify their
+   * visibility with soft assertions (this isn't page logic itself, which is
+   * why it doesn't include any assertion here).
+   */
+  getFormFieldLocators(): Record<string, Locator> {
+    const serviceLocators = Object.fromEntries(
+      Object.entries(SERVICE_LABELS).map(([service, label]) => [
+        `service:${service}`,
+        this.page.getByRole('checkbox', { name: label }),
+      ]),
+    );
+
+    return {
+      firstName: this.page.locator(this.firstNameInput),
+      lastName: this.page.locator(this.lastNameInput),
+      email: this.page.locator(this.emailInput),
+      phone: this.page.locator(this.phoneInput),
+      company: this.page.locator(this.companyInput),
+      industry: this.page.locator(this.industrySelect),
+      timeline: this.page.locator(this.timelineSelect),
+      volume: this.page.locator(this.volumeInput),
+      details: this.page.locator(this.detailsTextarea),
+      submitButton: this.page.getByRole('button', { name: 'Submit Request' }),
+      ...serviceLocators,
+    };
   }
 }

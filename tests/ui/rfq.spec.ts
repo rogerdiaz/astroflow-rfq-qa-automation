@@ -16,6 +16,14 @@ test.describe('RFQ Form', () => {
     await homePage.goToRfqForm();
   });
 
+  test('shows all expected form fields @sanity @regression', async () => {
+    const fields = rfqPage.getFormFieldLocators();
+
+    for (const [name, locator] of Object.entries(fields)) {
+      await expect.soft(locator, `field "${name}" should be visible`).toBeVisible();
+    }
+  });
+
   test('submits the form with valid data (happy path) @smoke @sanity @regression', async () => {
     await rfqPage.fillForm(baseValidData);
 
