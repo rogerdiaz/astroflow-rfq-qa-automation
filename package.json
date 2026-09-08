@@ -1,0 +1,25 @@
+{
+  "name": "newtest",
+  "version": "1.0.0",
+  "description": "Proyecto de automatización con Playwright + TypeScript.",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rogerdiaz/newTest.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/rogerdiaz/newTest/issues"
+  },
+  "homepage": "https://github.com/rogerdiaz/newTest#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.5.0"
+  }
+}
