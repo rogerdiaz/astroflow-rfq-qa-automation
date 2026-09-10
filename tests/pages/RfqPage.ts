@@ -1,4 +1,4 @@
-import { Locator, Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 import { BasePage } from './BasePage';
 
 export type RfqIndustry =
@@ -80,7 +80,9 @@ export class RfqPage extends BasePage {
   }
 
   async checkService(service: RfqService) {
-    await this.page.getByRole('checkbox', { name: SERVICE_LABELS[service] }).check();
+    const checkbox = this.page.getByRole('checkbox', { name: SERVICE_LABELS[service] });
+    await checkbox.click();
+    await expect(checkbox).toHaveAttribute('aria-checked', 'true');
   }
 
   async submit() {
